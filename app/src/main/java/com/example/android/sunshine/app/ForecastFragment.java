@@ -19,10 +19,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.sax.StartElementListener;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,7 +33,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -44,8 +46,10 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
     public static final String LOG_TAG = ForecastFragment.class.getSimpleName();
     private ForecastAdapter mForecastAdapter;
 
-    private ListView mListView;
-    private int mPosition = ListView.INVALID_POSITION;
+    private RecyclerView mRecyclerView;
+
+
+    private int mPosition = RecyclerView.NO_POSITION;
     private boolean mUseTodayLayout;
 
     private static final String SELECTED_KEY = "selected_position";
@@ -134,33 +138,52 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         // The ForecastAdapter will take data from a source and
         // use it to populate the ListView it's attached to.
-        mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        // Get a reference to the ListView, and attach this adapter to it.
-        mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
-        mListView.setAdapter(mForecastAdapter);
-        TextView emptyForecastList = (TextView) rootView.findViewById(R.id.empty_forecast_list);
-        mListView.setEmptyView(emptyForecastList);
-        // We'll call our MainActivity
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        TextView emptyForecastList = (TextView) rootView.findViewById(R.id.recyclerview_forecast_empty);
 
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                // CursorAdapter returns a cursor at the correct position for getItem(), or null
-                // if it cannot seek to that position.
-                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
-                if (cursor != null) {
-                    String locationSetting = Utility.getPreferredLocation(getActivity());
-                    ((Callback) getActivity())
+        mForecastAdapter = new ForecastAdapter(
+                getActivity(),
+                new ForecastAdapter.ForecastAdapterOnClickHandler() {
+                    @Override
+                    public void onClick(Long date, ForecastAdapter.ForecastAdapterViewHolder vh) {
+                        String locationSetting = Utility.getPreferredLocation(getActivity());
+                        ((Callback) getActivity())
                             .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
-                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
+                                    locationSetting,
+                                    date
                             ));
-                }
-                mPosition = position;
-            }
-        });
+                        mPosition = vh.getAdapterPosition();
+                    }
+                },
+                emptyForecastList);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_forecast);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setAdapter(mForecastAdapter);
+        // Get a reference to the ListView, and attach this adapter to it.
+//        mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
+//        mListView.setAdapter(mForecastAdapter);
+//        mListView.setEmptyView(emptyForecastList);
+//        // We'll call our MainActivity
+//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+//                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+//                // if it cannot seek to that position.
+//                Cursor cursor = (Cursor) adapterView.getItemAtPosition(position);
+//                if (cursor != null) {
+//                    String locationSetting = Utility.getPreferredLocation(getActivity());
+//                    ((Callback) getActivity())
+//                            .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+//                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
+//                            ));
+//                }
+//                mPosition = position;
+//            }
+//        });
 
         // If there's instance state, mine it for useful information.
         // The end-goal here is that the user never knows that turning their device sideways
@@ -259,9 +282,9 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         if (mPosition != ListView.INVALID_POSITION) {
             // If we don't need to restart the loader, and there's a desired position to restore
             // to, do so now.
-            mListView.smoothScrollToPosition(mPosition);
+//            mListView.smoothScrollToPosition(mPosition);
         }
-        updateEmptyView();
+//        updateEmptyView();
     }
 
     @Override
@@ -276,16 +299,16 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         }
     }
 
-    private void updateEmptyView (){
-        if (mForecastAdapter.getCount() == 0 ){
-            TextView tv = (TextView) getView().findViewById(R.id.empty_forecast_list);
-            if (tv != null){
-                int messaege = R.string.empty_forecast_list;
-                if(Utility.isNetworkAvailable(getActivity())){
-                    messaege = R.string.empty_forecast_list_no_network;
-                }
-                tv.setText(messaege);
-            }
-        }
-    }
+//    private void updateEmptyView (){
+//        if (mForecastAdapter.getCount() == 0 ){
+//            TextView tv = (TextView) getView().findViewById(R.id.empty_forecast_list);
+//            if (tv != null){
+//                int messaege = R.string.empty_forecast_list;
+//                if(Utility.isNetworkAvailable(getActivity())){
+//                    messaege = R.string.empty_forecast_list_no_network;
+//                }
+//                tv.setText(messaege);
+//            }
+//        }
+//    }
 }
