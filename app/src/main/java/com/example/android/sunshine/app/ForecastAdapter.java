@@ -103,13 +103,13 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         int weatherId = mCursor.getInt(ForecastFragment.COL_WEATHER_CONDITION_ID);
         int defaultImage;
 
-        switch (getItemViewType(position)) {
-            case VIEW_TYPE_TODAY:
+//        switch (getItemViewType(position)) {
+//            case VIEW_TYPE_TODAY:
                 defaultImage = Utility.getArtResourceForWeatherCondition(weatherId);
-                break;
-            default:
-                defaultImage = Utility.getIconResourceForWeatherCondition(weatherId);
-        }
+//                break;
+//            default:
+//                defaultImage = Utility.getIconResourceForWeatherCondition(weatherId);
+//        }
 
 //        if ( Utility.usingLocalGraphics(mContext) ) {
             forecastAdapterViewHolder.mIconView.setImageResource(defaultImage);

@@ -50,6 +50,8 @@ http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     <dimen name="forecast_detail_padding_wide">16dp</dimen>
     <dimen name="detail_container_bottom_margin">@dimen/detail_view_padding</dimen>
 
+    <dimen name="margin_top_list_item_today">0dp</dimen>
+
 
 </resources>
 

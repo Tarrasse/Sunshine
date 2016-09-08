@@ -15,17 +15,24 @@
  */
 package com.example.android.sunshine.app;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.sax.StartElementListener;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -141,6 +148,14 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
+        final Toolbar parallexBar = (Toolbar) rootView.findViewById(R.id.parallex_bar);
+        if (parallexBar != null){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ((AppCompatActivity)getActivity()).setSupportActionBar(parallexBar);
+            }
+        }
+
+
         TextView emptyForecastList = (TextView) rootView.findViewById(R.id.recyclerview_forecast_empty);
 
         mForecastAdapter = new ForecastAdapter(
@@ -162,6 +177,43 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_forecast);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mForecastAdapter);
+        if (parallexBar != null){
+            mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    int max = parallexBar.getHeight();
+                    if (dy > 0 ){
+                        parallexBar.setTranslationY(Math.max(-max, parallexBar.getTranslationY() - dy / 2));
+                    }else {
+                        parallexBar.setTranslationY(Math.min(0, parallexBar.getTranslationY() - dy / 2));
+                    }
+                }
+            });
+        }
+
+        final AppBarLayout appBarView = (AppBarLayout) rootView.findViewById(R.id.appbar);
+        if (appBarView != null){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+
+                ViewCompat.setElevation(appBarView, 0);
+                mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        super.onScrolled(recyclerView, dx, dy);
+                        if (0 == mRecyclerView.computeVerticalScrollOffset()){
+                            appBarView.setElevation(0);
+                        }else {
+                            appBarView.setElevation(10);
+                        }
+                    }
+                });
+
+            }
+        }
+
         // Get a reference to the ListView, and attach this adapter to it.
 //        mListView = (ListView) rootView.findViewById(R.id.listview_forecast);
 //        mListView.setAdapter(mForecastAdapter);
@@ -177,7 +229,8 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 //                if (cursor != null) {
 //                    String locationSetting = Utility.getPreferredLocation(getActivity());
 //                    ((Callback) getActivity())
-//                            .onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+//                            .
+// (WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
 //                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
 //                            ));
 //                }
@@ -311,4 +364,13 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 //            }
 //        }
 //    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mRecyclerView != null){
+            mRecyclerView.clearOnScrollListeners();
+        }
+    }
 }

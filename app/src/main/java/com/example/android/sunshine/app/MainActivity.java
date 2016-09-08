@@ -18,6 +18,8 @@ package com.example.android.sunshine.app;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.internal.widget.AppCompatPopupWindow;
@@ -43,9 +45,11 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(false);
-        getSupportActionBar().setTitle("");
+        if (toolbar != null){
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(false);
+            getSupportActionBar().setTitle("");
+        }
 
 
         if (findViewById(R.id.weather_detail_container) != null) {
@@ -63,7 +67,10 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
             }
         } else {
             mTwoPane = false;
-            getSupportActionBar().setElevation(0f);
+            if (toolbar != null){
+                getSupportActionBar().setElevation(0f);
+            }
+
         }
 
         ForecastFragment forecastFragment =  ((ForecastFragment)getSupportFragmentManager()
@@ -132,7 +139,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         } else {
             Intent intent = new Intent(this, DetailActivity.class)
                     .setData(contentUri);
-            startActivity(intent);
+            ActivityOptionsCompat ActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(this);
+            ActivityCompat.startActivity(this, intent, ActivityOptions.toBundle());
         }
     }
 }

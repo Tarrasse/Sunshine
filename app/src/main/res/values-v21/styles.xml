@@ -2,8 +2,21 @@
 <resources>
     <!-- Settings activity theme. -->
     <style name="SettingsTheme" parent="@android:style/Theme.Material.Light.DarkActionBar">
-        <item name="android:colorPrimary">@color/sunshine_blue</item>
-        <item name="android:colorPrimaryDark">@color/sunshine_dark_blue</item>
+        <item name="android:colorPrimary">@color/color_primary</item>
+        <item name="android:colorPrimaryDark">@color/color_primary_dark</item>
     </style>
+
+    <!-- Main activity theme. -->
+    <style name="AppTheme.main" parent="AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <!--detail Activity them-->
+    <style name="AppTheme.detail" parent="AppTheme">
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterTransition">@transition/detail_window_enter_transitions</item>
+        <item name="android:windowReturnTransition">@transition/detail_window_return_transition</item>
+    </style>
+
 
 </resources>

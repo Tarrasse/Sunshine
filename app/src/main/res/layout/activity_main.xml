@@ -5,22 +5,22 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/toolbar"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <!--<android.support.v7.widget.Toolbar-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/toolbar"-->
+        <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">-->
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="?attr/listPreferredItemHeight"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:src="@drawable/ic_logo"
-            android:scaleType="center"
-            android:layout_gravity="center_horizontal"
-            />
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="?attr/listPreferredItemHeight"-->
+            <!--android:layout_marginTop="?attr/actionBarSize"-->
+            <!--android:src="@drawable/ic_logo"-->
+            <!--android:scaleType="center"-->
+            <!--android:layout_gravity="center_horizontal"-->
+            <!--/>-->
 
-    </android.support.v7.widget.Toolbar>
+    <!--</android.support.v7.widget.Toolbar>-->
 
     <fragment
         android:id="@+id/fragment_forecast"

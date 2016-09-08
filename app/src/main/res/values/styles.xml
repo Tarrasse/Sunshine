@@ -9,8 +9,13 @@
     </style>
 
     <!-- Main activity theme. -->
-    <style name="ForecastTheme" parent="AppTheme">
-        <item name="actionBarStyle">@style/ActionBar.Solid.Sunshine.NoTitle</item>
+    <style name="AppTheme.main" parent="AppTheme">
+
+    </style>
+
+    <!--detail Activity them-->
+    <style name="AppTheme.detail" parent="AppTheme">
+
     </style>
 
     <!-- Settings activity theme. -->
